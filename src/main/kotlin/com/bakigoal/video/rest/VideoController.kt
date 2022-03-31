@@ -3,6 +3,8 @@ package com.bakigoal.video.rest
 import com.bakigoal.video.services.VideoService
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -23,7 +25,10 @@ class VideoController(val videoService: VideoService) {
 
     @GetMapping("{name}")
     fun getVideoByName(@PathVariable("name") name: String): ResponseEntity<Resource> {
-        return ResponseEntity.ok(ByteArrayResource(videoService.getVideo(name).data!!))
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType("video/mp4"))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${name}.mp4")
+            .body(ByteArrayResource(videoService.getVideo(name).data!!))
     }
 
     @GetMapping("all")
